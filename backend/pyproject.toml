@@ -1,0 +1,29 @@
+[project]
+name = "showtime"
+version = "0.1.0"
+description = "Small tool for aggregating film showings at UK cinemas into a single interface"
+requires-python = ">=3.12"
+authors = [{ name = "AlexGordon0", email = "alexmgordon231@gmail.com" }]
+dependencies = [
+  "fastapi[standard]>=0.163.2",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=2.4.1",
+  "pytest>=9.2.0",
+  "ruff>=0.17.5",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.9,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.fastapi]
+entrypoint = "showtime.main:app"
+
+[tool.mypy]
+strict = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
