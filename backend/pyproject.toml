@@ -5,6 +5,7 @@ description = "Small tool for aggregating film showings at UK cinemas into a sin
 requires-python = ">=3.12"
 authors = [{ name = "AlexGordon0", email = "alexmgordon231@gmail.com" }]
 dependencies = [
+  "alembic>=1.20.1",
   "fastapi[standard]>=0.163.2",
   "psycopg[binary]>=3.3.9",
   "pydantic-settings>=2.16.3",

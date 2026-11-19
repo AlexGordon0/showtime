@@ -9,6 +9,8 @@ RUN uv sync --locked --no-install-project --no-dev
 
 COPY src ./src
 RUN uv sync --locked --no-dev
+COPY alembic.ini ./
+COPY migrations ./migrations
 
 ENV PATH="/app/.venv/bin:$PATH"
 CMD ["fastapi", "run", "--port", "8000"]
