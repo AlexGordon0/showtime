@@ -2,6 +2,21 @@
 
 Endpoints and response formats for retrieving cinema, film, and showing data from Vue Cinemas.
 
+## Headers & Authorisation
+
+All requests to `/api/microservice/...` endpoints require an authentication token and standard JSON headers.
+
+| Header | Value |
+| :--- | :--- |
+| `User-Agent` | `showtime-scraper/0.1 (+https://github.com/AlexGordon0/showtime)` |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {microservicesToken}` |
+
+### Acquiring a Token
+
+A `{microservicesToken}` can be acquired by sending an initial request to `GET https://www.vue.com`. 
+The token is returned in the response headers (via `set-cookie` as `microservicesToken=...`).
+
 
 ## Fetch List of Cinemas
 
@@ -14,9 +29,6 @@ Endpoints which return a list of cinemas.
 Retrieves all available Vue cinemas grouped alphabetically.
 
 #### `GET https://www.myvue.com/api/microservice/showings/cinemas?filmId={filmId}`
-
-> [!WARNING]
-> This endpoint is bot-protected by Cloudflare, meaning cache misses return null.
 
 Retrieves all cinemas currently screening a given film.
 
@@ -86,9 +98,6 @@ Endpoints which return a list of films.
 Retrieves all films currently showing in Vue cinemas.
 
 #### `GET https://www.myvue.com/api/microservice/showings/films?cinemaId={cinemaId}` 
-
-> [!WARNING]
-> This endpoint is bot-protected by Cloudflare, meaning cache misses return null.
 
 Retrieves all films currently screening in a given cinema.
 
@@ -226,9 +235,6 @@ Endpoints which return a list of showtimes.
 ### Endpoints
 
 #### `GET https://www.myvue.com/api/microservice/showings/cinemas/{cinemaId}/films/{filmId}/showingGroups`
-
-> [!WARNING]
-> This endpoint is bot-protected by Cloudflare, meaning cache misses return null.
 
 Retrieves all showings for a given film in a given cinema
 
