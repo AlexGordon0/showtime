@@ -14,8 +14,11 @@ All requests to `/api/microservice/...` endpoints require an authentication toke
 
 ### Acquiring a Token
 
-A `{microservicesToken}` can be acquired by sending an initial request to `GET https://www.vue.com`. 
+A `{microservicesToken}` can be acquired by sending an initial request to `GET https://www.myvue.com/`. 
 The token is returned in the response headers (via `set-cookie` as `microservicesToken=...`).
+
+The token is valid for 12 hours before it expires, after which any requests to `/api/microservice/...` returns a 401 error.
+In this event, a new token must be requested in order to access the API.
 
 
 ## Fetch List of Cinemas
@@ -104,6 +107,18 @@ Retrieves all films currently screening in a given cinema.
 - **Example Request:** `GET https://www.myvue.com/api/microservice/showings/films?cinemaId=10051` 
 
 ##### Query Parameters
+
+| Parameter | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `cinemaId` | `str` | **Yes** | The unique ID of the cinema (matches `cinemaId` from the cinema endpoint). |
+
+#### `GET https://www.myvue.com/api/microservice/showings/cinemas/{cinemaId}/films?includesSession=true`
+
+Retrieves all showings in a given cinema. `includesSession=true` adds a `showingGroups` field in the film object which has a list of screenings for that film.
+
+- **Example Request:** `GET https://www.myvue.com/api/microservice/showings/cinemas/10051/films?includesSession=true`
+
+##### Path Parameters
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
@@ -236,16 +251,16 @@ Endpoints which return a list of showtimes.
 
 #### `GET https://www.myvue.com/api/microservice/showings/cinemas/{cinemaId}/films/{filmId}/showingGroups`
 
-Retrieves all showings for a given film in a given cinema
+Retrieves all showings for a given film in a given cinema.
 
 - **Example Request:** `GET https://www.myvue.com/api/microservice/showings/cinemas/10051/films/HO00020283/showingGroups`
 
-##### Parameters
+##### Path Parameters
 
-| Parameter | Location | Type | Required | Description |
-| :--- | :---- | :--- | :--- | :--- |
-| `cinemaId` | Path | `str` | **Yes** | The unique ID of the cinema (matches `cinemaId` from the cinema endpoint). |
-| `filmId` | Path | `str` | **Yes** | The unique ID of the film (matches `filmId` from the films endpoint). |
+| Parameter | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `cinemaId` | `str` | **Yes** | The unique ID of the cinema (matches `cinemaId` from the cinema endpoint). |
+| `filmId` | `str` | **Yes** | The unique ID of the film (matches `filmId` from the films endpoint). |
 
 
 ### Example Response
