@@ -54,7 +54,7 @@ class VueClient:
         try:
             body: dict[str, Any] = response.json()
         except JSONDecodeError:
-            raise ScraperError(f"Vue: expected JSON from {path}.") from JSONDecodeError
+            raise ScraperError(f"Vue: expected JSON from {path}.") from None
         if body.get("responseCode") != 0:
             raise ScraperError(
                 f"Vue: {body.get('responseCode')}: {body.get('errorMessage')}"
@@ -101,4 +101,4 @@ def parse_cinemas(data: dict[str, Any]) -> list[RawCinema]:
 
 
 def parse_showtimes(data: dict[str, Any]) -> list[RawShowtime]:
-    pass
+    return []
