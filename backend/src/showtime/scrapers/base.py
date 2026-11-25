@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
-from typing import Protocol
+from typing import Protocol, Self
 
 USER_AGENT = "showtime-scraper/0.1 (+https://github.com/AlexGordon0/showtime)"
 
@@ -42,13 +42,18 @@ class RawShowtime:
     film: RawFilm
     external_id: str
     starts_at: datetime
-    formats: tuple[Format, ...]
+    formats: tuple[Format, ...] = ()
     screen: str | None = None
     booking_url: str | None = None
 
 
 class ChainScraper(Protocol):
+    name: str
     slug: str
+    website: str
+
+    def __enter__(self) -> Self: ...
+    def __exit__(self, *exc: object) -> None: ...
 
     def fetch_cinemas(self) -> list[RawCinema]: ...
     def fetch_showtimes(self, cinema_external_id: str) -> list[RawShowtime]: ...
