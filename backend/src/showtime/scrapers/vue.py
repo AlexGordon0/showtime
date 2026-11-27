@@ -66,13 +66,16 @@ class VueClient:
         if response.status_code == 401:
             self._token = self._fetch_token()
             response = self._send(path, params)
-
-        response.raise_for_status()
+        self._check_status(response, path)
 
         try:
             body: dict[str, Any] = response.json()
         except JSONDecodeError as e:
             raise ScraperError(f"Vue: expected JSON from {path}.") from e
+
+        if not isinstance(body, dict):
+            raise ScraperError(f"Vue: JSON from {path} is not a dict.")
+
         if body.get("responseCode") != 0:
             raise ScraperError(
                 f"Vue: {body.get('responseCode')}: {body.get('errorMessage')}"
@@ -80,7 +83,8 @@ class VueClient:
         return body
 
     def _fetch_token(self) -> str:
-        self._request("/")
+        response = self._request("/")
+        self._check_status(response, "/")
         token = self._http.cookies.get("microservicesToken")
         if token is None:
             raise ScraperError(
@@ -95,9 +99,7 @@ class VueClient:
     def _request(self, path: str, **kwargs: Any) -> httpx.Response:
         try:
             self._throttle()
-            response = self._http.get(path, **kwargs)
-            response.raise_for_status()
-            return response
+            return self._http.get(path, **kwargs)
         except httpx.HTTPError as e:
             raise ScraperError(f"Vue: request to {path} failed: {e}") from e
 
@@ -107,6 +109,12 @@ class VueClient:
             if time_elapsed < MIN_REQUEST_INTERVAL:
                 time.sleep(MIN_REQUEST_INTERVAL - time_elapsed)
         self._last_request_at = time.monotonic()
+
+    def _check_status(self, response: httpx.Response, path: str) -> None:
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            raise ScraperError(f"Vue: request to {path} failed: {e}") from e
 
 
 def parse_cinemas(data: dict[str, Any]) -> list[RawCinema]:
